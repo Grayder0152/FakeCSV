@@ -1,7 +1,8 @@
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-$d3grm*zkw13+p7vta^&+1vm68b-@!ogq=-k7-@skke5-=(+@+'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-$d3grm*zkw13+p7vta^&+1vm68b-@!ogq=-k7-@skke5-=(+@+')
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
@@ -96,5 +97,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = 'redis://:paa4f59574add29f31203806609a1a6e738bfa985427aa4d30fe52bdb2680400b@ec2-54-170-250-90.eu-west-1.compute.amazonaws.com:7829'
+CELERY_BROKER_URL = os.environ.get('REDIS_TLS_URL', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = 'django-db'
