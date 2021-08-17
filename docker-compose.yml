@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    hostname: redis
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./:/usr/src/app/
+    depends_on:
+      - redis
+    ports:
+      - "8000:8000"
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - /static/:/staticfiles/
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A config worker -l info
+    volumes:
+      - ./:/usr/src/app/
+    links:
+      - redis
+    depends_on:
+      - redis
+

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Data Sets{% endblock %}
+
+{% block content %}
+
+{% include 'includes/header.html' %}
+<section class="w-75" style="padding-left:100px">
+    <nav class="navbar justify-content-between px-0">
+        <p class="navbar-brand">Data sets</p>
+        <form action="" method="post" class="form-inline d-flex justify-content-end">
+            {% csrf_token %}
+            <label for="rows">Rows:</label>
+            <input type="number" class="form-control mx-3 col-md-4" name="rows" id="rows" min=1 max=5000 required>
+            <button class="btn btn-success my-2 my-sm-0 text-white" type="submit" id="generate_data">Generate data</button>
+        </form>
+    </nav>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Created</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for file in schema.csv_files.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ file.create_at|date:'Y-m-d' }}</td>
+            {% if file.status %}
+                <td class="status ready"><span class="badge badge-success">Ready</span></td>
+                <td><a href="{{ request.scheme }}://{{ request.get_host }}/{{ file.csv_file.name }}" download>Download</a></td> 
+            {% else %}
+                <td class="status processing" task_id="{{ file.task_id }}" file_id="{{ file.id }}"><span class="badge badge-secondary">Processing</span></td>
+                <td class="download"></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    tasks = $('.processing');
+
+    $.each(tasks, function( index, element ){
+        taskid = element.getAttribute('task_id');
+        fileid = element.getAttribute('file_id');
+        get_task_info(taskid, fileid, element);
+    });
+
+
+    function get_task_info( tid, fid, element ){
+        $.ajax({
+            type: 'get',
+            url: '/get-task-info/',
+            data: {
+                'task_id': tid,
+                'file_id': fid
+            },
+            success: function (data) {
+                if (data.state != 'SUCCESS') {
+                    setTimeout(function () {
+                        get_task_info(tid, fid, element)
+                    }, 1000);
+                }
+                else{
+                    element.innerHTML = '<span class="badge badge-success">Ready</span>';
+                    element.nextElementSibling.innerHTML = '<a href="{{ request.scheme }}://{{ request.get_host }}/'+ data.file_url +'" download>Download</a>';
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Data Schemas{% endblock %}
+
+{% block content %}
+
+{% include 'includes/header.html' %}
+<section class="w-75" style="padding-left:100px">
+    <nav class="navbar justify-content-between px-0">
+        <p class="navbar-brand">Data Schemas</p>
+        <a class="btn btn-success my-2 my-sm-0 text-white" type="submit" href="{% url 'new_schema' %}">New schema</a>
+    </nav>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Modified</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for schema in schema_list %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td><a href="{% url 'data_sets' pk=schema.id %}">{{ schema.title }}</a></td>
+            <td>{{ schema.modified|date:'Y-m-d' }}</td>
+            <td>
+                <a href="{% url 'update_data_schema' pk=schema.id %}">Edit schema</a>
+                <a href="{% url 'delete_data_schema' pk=schema.id %}" class="text-danger ml-3" onclick="return confirm('Are you sure you want to delete schema {{ schema }}?');">Delete</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
+

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+    <h1 class="mb-5">Login</h1>
+    {% for error, text in form.errors.items %}
+    <div class="alert alert-danger" role="alert">
+        {{text.as_text}}
+    </div>
+    {% endfor %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            {{ form.password }}
+        </div>
+        <button type="submit" class="btn btn-primary float-right">Login</button>
+    </form>
+</div>
+{% endblock %}

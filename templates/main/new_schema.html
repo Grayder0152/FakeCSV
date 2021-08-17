@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}New Schema{% endblock %}
+
+{% block content %}
+
+{% include 'includes/header.html' %}
+<section class="w-75" style="padding-left:100px">
+    <form action="" method="post">
+        <nav class="navbar justify-content-between px-0">
+            <h2>New Schema</h2>
+            <button class="btn btn-primary my-2 my-sm-0 text-white" type="submit">Submit</button>
+        </nav>
+        {% csrf_token %}
+        <div class="w-50">
+            {{ form }}
+        </div>
+        <div class="ml-3 mt-5">
+            <h2>Schema Columns</h2>
+            {{ columns.management_form }}
+
+            {% for f in columns.forms %}
+            <div class="row align-items-center formset_row ml-0">
+                <div class="d-flex col-md-9 px-0">
+                {% for field in f.visible_fields %}
+                {% if forloop.counter == 5 %}
+                    </div>
+                    <div class="col-md-2 ml-5">
+                {% endif %}
+                    <div class="form-group mr-2 {% if forloop.counter < 3 %}col-md-4 px-0{% endif %}">
+                        {% if forloop.first %}
+                            {% for hidden in f.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endif %}
+                        {% if not forloop.last %}
+                        {{ field.label }}
+                        {% endif %}
+                        {{ field }}
+                        {{ field.errors.as_ul }}
+                    </div>             
+                {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+
+    <style type="text/css">
+        .errorlist{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            color: red;
+            font-size: 12px;
+            position: absolute;
+        }
+    </style>
+</section>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'main/js/jquery.formset.js' %}"></script>
+
+<script type="text/javascript">
+    toggleRange();
+
+    $('#id_user_id').val('{{ request.user.id }}');
+
+    $('.formset_row').formset({
+        addText: 'Add column',
+        deleteText: 'Delete',
+        prefix: 'columns',
+        addCssClass: 'btn btn-primary my-2 my-sm-0 add_column',
+        deleteCssClass: 'delete-row text-danger'
+    });
+
+    $('.add_column').click(function(){
+        toggleRange();
+    });
+    function toggleRange(){
+        $.each($('.form-group .custom-select'), function( index, element ){
+            if(element.value != 'I'){
+                $('#id_columns-'+ index +'-range_from').parent().hide();
+                $('#id_columns-'+ index +'-range_to').parent().hide();
+            }
+            element.oninput = function(){
+                if(element.value == 'I'){
+                    $('#id_columns-'+ index +'-range_from').parent().show();
+                    $('#id_columns-'+ index +'-range_to').parent().show();
+                }
+                else{
+                    $('#id_columns-'+ index +'-range_from').parent().hide();
+                    $('#id_columns-'+ index +'-range_to').parent().hide();
+                }
+            }
+        });
+    }
+
+</script>
+{% endblock %}
