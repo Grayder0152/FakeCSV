@@ -100,4 +100,4 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = os.environ.get('REDIS_TLS_URL', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = 'django-db'
 
-DEFAULT_FILE_STORAGE = 'config.storage.MediaStorage'
+# DEFAULT_FILE_STORAGE = 'config.storage.MediaStorage'
