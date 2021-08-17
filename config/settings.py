@@ -96,5 +96,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://:paa4f59574add29f31203806609a1a6e738bfa985427aa4d30fe52bdb2680400b@ec2-54-170-250-90.eu-west-1.compute.amazonaws.com:7829'
 CELERY_RESULT_BACKEND = 'django-db'
