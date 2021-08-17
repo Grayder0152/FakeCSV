@@ -97,6 +97,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-# CELERY_BROKER_URL = os.environ.get('REDIS_TLS_URL', 'redis://redis:6379/0')
-CELERY_BROKER_URL = 'rediss://:p4e7754c1e77d1564e05cb20c990355fe5c345497912a08bb899ab5a372c9d7ed@ec2-54-170-250-90.eu-west-1.compute.amazonaws.com:12170'
+CELERY_BROKER_URL = os.environ.get('REDIS_TLS_URL', 'redis://redis:6379/0')
+# CELERY_BROKER_URL = 'rediss://:p4e7754c1e77d1564e05cb20c990355fe5c345497912a08bb899ab5a372c9d7ed@ec2-54-170-250-90.eu-west-1.compute.amazonaws.com:12170'
 CELERY_RESULT_BACKEND = 'django-db'
+
+DEFAULT_FILE_STORAGE = 'config.storage.MediaStorage'
